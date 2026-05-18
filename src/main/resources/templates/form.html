@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GamerHub — Cadastro</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        :root {
+            --bg: #0a0a0f;
+            --surface: #111118;
+            --card: #16161f;
+            --border: #2a2a3d;
+            --accent: #00f5c4;
+            --accent2: #7b2fff;
+            --danger: #ff3c6e;
+            --text: #e8e8f0;
+            --muted: #6b6b8a;
+            --glow: 0 0 20px rgba(0,245,196,0.25);
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 16px;
+            min-height: 100vh;
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image:
+                linear-gradient(rgba(0,245,196,0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0,245,196,0.03) 1px, transparent 1px);
+            background-size: 40px 40px;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        body::after {
+            content: '';
+            position: fixed;
+            top: -200px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(123,47,255,0.12) 0%, transparent 70%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .wrapper {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            max-width: 560px;
+            padding: 40px 24px 60px;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--muted);
+            text-decoration: none;
+            font-size: 0.85rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 32px;
+            transition: color 0.15s;
+        }
+
+        .back-link:hover { color: var(--accent); }
+
+        .page-header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 36px;
+        }
+
+        .logo-icon {
+            width: 52px;
+            height: 52px;
+            background: linear-gradient(135deg, var(--accent), var(--accent2));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 26px;
+            box-shadow: var(--glow);
+        }
+
+        h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: clamp(1.2rem, 3vw, 1.6rem);
+            font-weight: 900;
+            letter-spacing: 2px;
+            background: linear-gradient(90deg, var(--accent), #fff 60%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            font-size: 0.82rem;
+            color: var(--muted);
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-top: 3px;
+        }
+
+        .form-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 36px;
+            box-shadow: 0 12px 48px rgba(0,0,0,0.5);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .form-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent2), var(--accent));
+        }
+
+        .field-group {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .field {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        label {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.65rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--muted);
+        }
+
+        .input-wrap {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .input-icon {
+            position: absolute;
+            left: 14px;
+            font-size: 1rem;
+            pointer-events: none;
+        }
+
+        input {
+            width: 100%;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 13px 16px 13px 44px;
+            color: var(--text);
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 1rem;
+            font-weight: 600;
+            letter-spacing: 0.3px;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            outline: none;
+        }
+
+        input:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(0,245,196,0.1);
+        }
+
+        input::placeholder {
+            color: var(--muted);
+            font-weight: 400;
+        }
+
+        input[type="hidden"] { display: none; }
+
+        .divider {
+            border: none;
+            border-top: 1px solid var(--border);
+            margin: 8px 0;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 8px;
+        }
+
+        .btn-submit {
+            flex: 1;
+            background: linear-gradient(135deg, var(--accent), #00c49a);
+            color: #000;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            border: none;
+            padding: 14px 24px;
+            border-radius: 10px;
+            cursor: pointer;
+            box-shadow: var(--glow);
+            transition: transform 0.15s, box-shadow 0.15s;
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 32px rgba(0,245,196,0.45);
+        }
+
+        .btn-cancel {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 14px 20px;
+            border-radius: 10px;
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--muted);
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-decoration: none;
+            letter-spacing: 0.5px;
+            transition: border-color 0.15s, color 0.15s;
+        }
+
+        .btn-cancel:hover {
+            border-color: var(--muted);
+            color: var(--text);
+        }
+
+        .hint {
+            font-size: 0.8rem;
+            color: var(--muted);
+            margin-top: 4px;
+        }
+    </style>
+</head>
+<body>
+<div class="wrapper">
+
+    <a href="/" class="back-link">← Voltar à lista</a>
+
+    <div class="page-header">
+        <div class="logo-icon">🎮</div>
+        <div>
+            <h1>GamerHub</h1>
+            <div class="subtitle">Cadastro de Jogador</div>
+        </div>
+    </div>
+
+    <div class="form-card">
+        <form th:action="@{/salvar}" th:object="${usuario}" method="post">
+            <input type="hidden" th:field="*{id}">
+
+            <div class="field-group">
+
+                <div class="field">
+                    <label for="nickname">Nickname</label>
+                    <div class="input-wrap">
+                        <span class="input-icon">🎯</span>
+                        <input type="text" id="nickname" th:field="*{nickname}"
+                               placeholder="Seu apelido no jogo" required>
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label for="email">Email</label>
+                    <div class="input-wrap">
+                        <span class="input-icon">📧</span>
+                        <input type="email" id="email" th:field="*{email}"
+                               placeholder="seu@email.com" required>
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label for="jogoFavorito">Jogo Favorito</label>
+                    <div class="input-wrap">
+                        <span class="input-icon">🕹️</span>
+                        <input type="text" id="jogoFavorito" th:field="*{jogoFavorito}"
+                               placeholder="Ex: Valorant, CS2, Minecraft..." required>
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label for="nivel">Nível do Jogador</label>
+                    <div class="input-wrap">
+                        <span class="input-icon">⚡</span>
+                        <input type="number" id="nivel" th:field="*{nivel}"
+                               placeholder="1 a 100" min="1" max="100" required>
+                    </div>
+                    <span class="hint">1–33 Iniciante · 34–66 Intermediário · 67–100 Lendário</span>
+                </div>
+
+                <hr class="divider">
+
+                <div class="form-actions">
+                    <button type="submit" class="btn-submit">💾 Salvar Gamer</button>
+                    <a href="/" class="btn-cancel">Cancelar</a>
+                </div>
+
+            </div>
+        </form>
+    </div>
+
+</div>
+</body>
+</html>
